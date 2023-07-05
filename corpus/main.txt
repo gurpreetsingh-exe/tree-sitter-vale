@@ -1,0 +1,66 @@
+========================================================================
+empty function
+========================================================================
+
+func main() {}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters))
+    (block)))
+
+
+========================================================================
+simple small string
+========================================================================
+
+func main() {
+    "Hello World"
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters))
+    (block
+      (literal
+        (string_literal)))))
+
+========================================================================
+small string with hex escape
+========================================================================
+
+func main() {
+    "sprog\u001bwoggle" + "sprog\nbwoggle"
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters))
+    (block
+      (binary_expr
+        (literal
+          (string_literal
+            (escape_sequence)))
+        (literal
+          (string_literal
+            (escape_sequence)))))))
+
+========================================================================
+string interpolation
+========================================================================
+
+exported func main() str {
+    return """bl"{ns(4)}rg""";
+}
