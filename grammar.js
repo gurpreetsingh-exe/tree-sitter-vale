@@ -235,7 +235,6 @@ module.exports = grammar({
           "<",
           choice(
             comma_sep1($.generic_parameter),
-            comma_sep1($.region_parameter),
           ),
           optional(","),
           ">",
@@ -244,6 +243,7 @@ module.exports = grammar({
     rune: (_) => choice(...RUNES),
     generic_parameter: ($) =>
       choice(
+        $.region_parameter,
         seq(
           field("name", $._type_identifier),
           field("rune", $.rune),
@@ -252,15 +252,15 @@ module.exports = grammar({
       ),
     region_parameter: ($) =>
       seq(
+        field("name", $.identifier),
         OWNERSHIP.region,
-        $.identifier,
         optional(
           KEYWORD.ro,
         ),
       ),
     region_specifier: ($) =>
       seq(
-        $.identifier,
+        field("name", $.identifier),
         OWNERSHIP.region,
       ),
     parameters: ($) =>
@@ -295,9 +295,7 @@ module.exports = grammar({
     mutability: (_) => choice(KEYWORD.mut, KEYWORD.imm),
     type: ($) =>
       seq(
-        optional(
-          $.region_specifier,
-        ),
+        optional($.region_specifier),
         choice(
           $._type_identifier,
           $.generic_type,
@@ -307,7 +305,9 @@ module.exports = grammar({
         ),
       ),
     reference_type: ($) => seq("&", $.type),
-    array_type: ($) => choice($.static_array_type, $.dynamic_array_type),
+    array_type: ($) => seq(
+        choice($.static_array_type, $.dynamic_array_type),
+      ),
     dynamic_array_type: ($) =>
       seq(
         "[",

@@ -125,10 +125,8 @@ exported func region<a' ro>() {
       (identifier)
       (generic_parameters
         (generic_parameter
-          (type
-            (region_specifier
-              (identifier))
-            (type_identifier))))
+          (region_parameter
+              (identifier))))
       (parameters))
     (block
       (variable_definition
@@ -141,7 +139,7 @@ exported func region<a' ro>() {
 function with region complex type
 ========================================================================
 
-exported func region<a' ro>(lovely_things a'List<a'str>) {
+exported func region<a' ro>(lovely_things &a'List<a'str>) {
   "Leet!"
 }
 
@@ -153,24 +151,24 @@ exported func region<a' ro>(lovely_things a'List<a'str>) {
       (identifier)
       (generic_parameters
         (generic_parameter
-          (type
-            (region_specifier
-              (identifier))
-            (type_identifier))))
+            (region_parameter
+              (identifier))))
       (parameters
         (parameter
           (identifier)
           (type
-            (region_specifier
-              (identifier))
-            (generic_type
-              (type_identifier)
-              (generic_parameters
-                (generic_parameter
+                (reference_type
                   (type
                     (region_specifier
                       (identifier))
-                    (type_identifier)))))))))
+                    (generic_type
+                      (type_identifier)
+                      (generic_parameters
+                        (generic_parameter
+                          (type
+                            (region_specifier
+                              (identifier))
+                            (type_identifier)))))))))))
     (block
       (literal
           (string_literal)))))
