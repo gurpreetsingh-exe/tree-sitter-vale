@@ -102,6 +102,8 @@ const KEYWORD = {
   doubleEquals: "==",
   notEquals: "!=",
 
+  mod: "mod",
+
   drop: "drop",
   free: "free",
   not: "not",
@@ -570,7 +572,7 @@ module.exports = grammar({
         // This will probably change to be actual builtin functions, and not just externals
         [PREC.bitwise, choice(BITWISE.lshift, BITWISE.rshift, BITWISE.xor)],
         [PREC.additive, choice(KEYWORD.plus, KEYWORD.minus)],
-        [PREC.multiplicative, choice(KEYWORD.asterisk, KEYWORD.slash)],
+        [PREC.multiplicative, choice(KEYWORD.asterisk, KEYWORD.slash, KEYWORD.mod)],
       ];
 
       return choice(
