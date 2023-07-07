@@ -297,6 +297,7 @@ module.exports = grammar({
         optional(
           comma_sep1($.parameter),
         ),
+        optional(","),
         ")",
       ),
     parameter: ($) =>
