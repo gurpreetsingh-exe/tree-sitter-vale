@@ -216,6 +216,10 @@ module.exports = grammar({
         choice(
           field("operator",
             choice(
+              KEYWORD.plus,
+              KEYWORD.asterisk,
+              KEYWORD.slash,
+              KEYWORD.minus,
               KEYWORD.spaceship,
               KEYWORD.lessEquals,
               KEYWORD.less,
