@@ -30,6 +30,9 @@
 
 (line_comment) @comment
 
+(region_parameter [(identifier) "'"] @storageclass.region)
+(region_specifier [(identifier) "'"] @storageclass.region)
+
 [
  "("
  ")"
@@ -87,6 +90,7 @@
  "extern"
  "import"
  "exported"
+ "pure"
  "struct"
  "imm"
  "mut"
