@@ -1149,6 +1149,10 @@
       "required": false,
       "types": [
         {
+          "type": "region_parameter",
+          "named": true
+        },
+        {
           "type": "type",
           "named": true
         }
@@ -1161,7 +1165,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "generic_parameter",
@@ -1330,7 +1334,7 @@
           "named": true
         },
         {
-          "type": "import_wilacard",
+          "type": "import_wildcard",
           "named": true
         },
         {
@@ -1341,7 +1345,7 @@
     }
   },
   {
-    "type": "import_wilacard",
+    "type": "import_wildcard",
     "named": true,
     "fields": {},
     "children": {
@@ -1632,6 +1636,38 @@
     }
   },
   {
+    "type": "region_parameter",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "region_specifier",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "return_expr",
     "named": true,
     "fields": {},
@@ -1891,7 +1927,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -1904,6 +1940,10 @@
         },
         {
           "type": "reference_type",
+          "named": true
+        },
+        {
+          "type": "region_specifier",
           "named": true
         },
         {
@@ -2141,6 +2181,10 @@
     "named": false
   },
   {
+    "type": "'",
+    "named": false
+  },
+  {
     "type": "(",
     "named": false
   },
@@ -2293,6 +2337,10 @@
     "named": true
   },
   {
+    "type": "export",
+    "named": false
+  },
+  {
     "type": "exported",
     "named": false
   },
@@ -2385,7 +2433,15 @@
     "named": false
   },
   {
+    "type": "pure",
+    "named": false
+  },
+  {
     "type": "return",
+    "named": false
+  },
+  {
+    "type": "ro",
     "named": false
   },
   {

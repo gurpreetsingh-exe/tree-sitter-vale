@@ -20,6 +20,7 @@ const KEYWORD = {
   func: "func",
   import: "import",
   export: "export",
+  exported: "exported",
   true: "true",
   false: "false",
   own: "own",
@@ -120,6 +121,7 @@ const OWNERSHIP = {
   own: "^",
   borrow: "&",
   weak: "&&",
+  region: "'",
 };
 
 const RUNES = [
@@ -168,7 +170,7 @@ module.exports = grammar({
         $.struct_definition,
       ),
     import: ($) => seq(KEYWORD.import, $.import_path, ";"),
-    import_path: ($) => choice($._path, $.import_wilacard),
+    import_path: ($) => choice($._path, $.import_wildcard),
     attribute_name: (_) => choice(...MACROS),
     attribute: ($) => seq("#", optional("!"), $.attribute_name),
     scoped_identifier: ($) =>
@@ -194,7 +196,7 @@ module.exports = grammar({
         ".",
         field("name", $._type_identifier),
       ),
-    import_wilacard: ($) => seq(optional(seq($._path, ".")), "*"),
+    import_wildcard: ($) => seq(optional(seq($._path, ".")), "*"),
     extern: ($) =>
       seq(
         "extern",
@@ -204,7 +206,9 @@ module.exports = grammar({
       seq(
         optional(
           choice(
-            "exported",
+            KEYWORD.pure,
+            KEYWORD.export,
+            KEYWORD.exported,
             $.extern,
           ),
         ),
@@ -229,7 +233,7 @@ module.exports = grammar({
         1,
         seq(
           "<",
-          optional(
+          choice(
             comma_sep1($.generic_parameter),
           ),
           optional(","),
@@ -239,11 +243,25 @@ module.exports = grammar({
     rune: (_) => choice(...RUNES),
     generic_parameter: ($) =>
       choice(
+        $.region_parameter,
         seq(
           field("name", $._type_identifier),
           field("rune", $.rune),
         ),
         $.type,
+      ),
+    region_parameter: ($) =>
+      seq(
+        field("name", $.identifier),
+        OWNERSHIP.region,
+        optional(
+          KEYWORD.ro,
+        ),
+      ),
+    region_specifier: ($) =>
+      seq(
+        field("name", $.identifier),
+        OWNERSHIP.region,
       ),
     parameters: ($) =>
       seq(
@@ -276,15 +294,20 @@ module.exports = grammar({
       ),
     mutability: (_) => choice(KEYWORD.mut, KEYWORD.imm),
     type: ($) =>
-      choice(
-        $._type_identifier,
-        $.generic_type,
-        $.scoped_type_identifier,
-        $.array_type,
-        $.reference_type,
+      seq(
+        optional($.region_specifier),
+        choice(
+          $._type_identifier,
+          $.generic_type,
+          $.scoped_type_identifier,
+          $.array_type,
+          $.reference_type,
+        ),
       ),
     reference_type: ($) => seq("&", $.type),
-    array_type: ($) => choice($.static_array_type, $.dynamic_array_type),
+    array_type: ($) => seq(
+        choice($.static_array_type, $.dynamic_array_type),
+      ),
     dynamic_array_type: ($) =>
       seq(
         "[",

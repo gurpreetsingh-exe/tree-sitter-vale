@@ -64,3 +64,111 @@ string interpolation
 exported func main() str {
     return """bl"{ns(4)}rg""";
 }
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+        (parameters)
+        (type
+          (type_identifier)))
+      (block
+        (expr_statement
+          (return_expr
+            (literal
+              (string_literal)
+              (escape_sequence
+                (call_expr
+                  (identifier)
+                  (parameters
+                    (numeric_literal))))
+              (string_literal))))))))
+
+========================================================================
+pure function
+========================================================================
+
+pure func main() str {
+    return "hi";
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters)
+      (type
+        (type_identifier)))
+    (block
+      (expr_statement
+        (return_expr
+          (literal
+            (string_literal)))))))
+
+========================================================================
+function with read only region
+========================================================================
+
+exported func region<a' ro>() {
+  hi = "fun!";
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (generic_parameters
+        (generic_parameter
+          (region_parameter
+              (identifier))))
+      (parameters))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (literal
+          (string_literal))))))
+
+========================================================================
+function with region complex type
+========================================================================
+
+exported func region<a' ro>(lovely_things &a'List<a'str>) {
+  "Leet!"
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (generic_parameters
+        (generic_parameter
+            (region_parameter
+              (identifier))))
+      (parameters
+        (parameter
+          (identifier)
+          (type
+                (reference_type
+                  (type
+                    (region_specifier
+                      (identifier))
+                    (generic_type
+                      (type_identifier)
+                      (generic_parameters
+                        (generic_parameter
+                          (type
+                            (region_specifier
+                              (identifier))
+                            (type_identifier)))))))))))
+    (block
+      (literal
+          (string_literal)))))
