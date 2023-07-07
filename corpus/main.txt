@@ -370,11 +370,11 @@ func cursed(i int) Goblin {
           (identifier))))))
 
 ========================================================================
-variable definition with int literal array access
+variable definition with mixed literal array access
 ========================================================================
 
-func cursed() Goblin {
-  goblin = goblins[13];
+func cursed(i int) Goblin {
+  goblin = goblins[13][i];
 }
 
 ------------------------------------------------------------------------
@@ -383,7 +383,11 @@ func cursed() Goblin {
   (function_definition
     (func_header
       (identifier)
-      (parameters)
+      (parameters
+        (parameter
+          (identifier)
+          (type
+            (type_identifier))))
       (type
         (type_identifier)))
     (block
@@ -392,4 +396,37 @@ func cursed() Goblin {
           (identifier))
         (array_access
           (identifier)
+          (int_lit)
+          (identifier))))))
+
+========================================================================
+variable definition with multi array access
+========================================================================
+
+func cursed(i int) Goblin {
+  goblin = goblins[13][i][1][100];
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type
+            (type_identifier))))
+      (type
+        (type_identifier)))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (array_access
+          (identifier)
+          (int_lit)
+          (identifier)
+          (int_lit)
           (int_lit))))))

@@ -846,50 +846,62 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "identifier"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "call_expr"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "generic_function"
-              }
-            ]
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "call_expr"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "generic_function"
+                }
+              ]
+            }
           },
           {
-            "type": "STRING",
-            "value": "["
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "identifier"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "call_expr"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "generic_function"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "int_lit"
-              }
-            ]
-          },
-          {
-            "type": "STRING",
-            "value": "]"
+            "type": "REPEAT1",
+            "content": {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "["
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "call_expr"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "generic_function"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "int_lit"
+                    }
+                  ]
+                },
+                {
+                  "type": "STRING",
+                  "value": "]"
+                }
+              ]
+            }
           }
         ]
       }

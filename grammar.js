@@ -335,19 +335,25 @@ module.exports = grammar({
     array_access: ($) => 
       prec(1,
         seq(
-          choice(
-            $.identifier,
-            $.call_expr,
-            $.generic_function,
+          field("name",
+            choice(
+              $.identifier,
+              $.call_expr,
+              $.generic_function,
+            ),
           ),
-          "[",
-          choice(
-            $.identifier,
-            $.call_expr,
-            $.generic_function,
-            $.int_lit,
+          repeat1(
+            seq(
+              "[",
+              choice(
+                $.identifier,
+                $.call_expr,
+                $.generic_function,
+                $.int_lit,
+              ),
+              "]",
+            ),
           ),
-          "]",
         ),
       ),
     array_type: ($) => seq(
