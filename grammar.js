@@ -358,7 +358,10 @@ module.exports = grammar({
         ),
       ),
     array_type: ($) => seq(
-        choice($.static_array_type, $.dynamic_array_type),
+        choice(
+          prec(2, repeat1($.static_array_type)),
+          prec(1, repeat1($.dynamic_array_type))
+        ),
       ),
     dynamic_array_type: ($) =>
       seq(
@@ -514,7 +517,10 @@ module.exports = grammar({
       seq(
         field(
           "function",
-          $._expr,
+          choice(
+            $._expr,
+            $.array_type,
+          ),
         ),
         field(
           "parameters",

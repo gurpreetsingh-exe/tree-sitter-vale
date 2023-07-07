@@ -476,3 +476,80 @@ func cursed(i int) Goblin {
           (identifier)
           (int_lit)
           (int_lit))))))
+
+========================================================================
+multi array decl
+========================================================================
+
+func cursed(i [][]int) [][]Goblin {
+  return transform(i);
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type
+            (array_type
+              (dynamic_array_type
+                (type
+                  (array_type
+                    (dynamic_array_type
+                      (type
+                        (type_identifier))))))))))
+      (type
+        (array_type
+          (dynamic_array_type
+            (type
+              (array_type
+                (dynamic_array_type
+                  (type
+                    (type_identifier)))))))))
+    (block
+      (expr_statement
+        (return_expr
+          (call_expr
+            (identifier)
+            (identifier)))))))
+
+
+========================================================================
+multi array decl with construction
+========================================================================
+
+func cursed() [][]Goblin {
+  goblins = [][]Goblin();
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters)
+      (type
+        (array_type
+          (dynamic_array_type
+            (type
+              (array_type
+                (dynamic_array_type
+                  (type
+                    (type_identifier)))))))))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (call_expr
+          (array_type
+            (dynamic_array_type
+              (type
+                (array_type
+                  (dynamic_array_type
+                    (type
+                      (type_identifier))))))))))))

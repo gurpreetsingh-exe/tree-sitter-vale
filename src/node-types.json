@@ -50,7 +50,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -556,6 +556,10 @@
         "types": [
           {
             "type": "array_access",
+            "named": true
+          },
+          {
+            "type": "array_type",
             "named": true
           },
           {

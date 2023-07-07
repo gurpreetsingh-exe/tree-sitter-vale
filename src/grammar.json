@@ -929,12 +929,26 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "static_array_type"
+              "type": "PREC",
+              "value": 2,
+              "content": {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "static_array_type"
+                }
+              }
             },
             {
-              "type": "SYMBOL",
-              "name": "dynamic_array_type"
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "dynamic_array_type"
+                }
+              }
             }
           ]
         }
@@ -1641,8 +1655,17 @@
           "type": "FIELD",
           "name": "function",
           "content": {
-            "type": "SYMBOL",
-            "name": "_expr"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_expr"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "array_type"
+              }
+            ]
           }
         },
         {
