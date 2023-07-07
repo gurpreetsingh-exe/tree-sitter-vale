@@ -7,6 +7,7 @@ function sep_by(rule, separator) {
 }
 
 const PREC = {
+  bitwise: 8,
   field: 7,
   multiplicative: 6,
   additive: 5,
@@ -122,6 +123,12 @@ const OWNERSHIP = {
   borrow: "&",
   weak: "&&",
   region: "'",
+};
+
+const BITWISE = {
+  xor: "xor",
+  rshift: "rshift",
+  lshift: "lshift",
 };
 
 const RUNES = [
@@ -356,13 +363,8 @@ module.exports = grammar({
           field("generic_parameters", $.generic_parameters),
         ),
       ),
-    prim_type: (_) =>
+    int_type: (_) => 
       choice(
-        KEYWORD.bool,
-        KEYWORD.int,
-        KEYWORD.float,
-        KEYWORD.str,
-        KEYWORD.void,
         KEYWORD.i32,
         KEYWORD.i64,
         KEYWORD.i16,
@@ -371,6 +373,15 @@ module.exports = grammar({
         KEYWORD.u64,
         KEYWORD.u16,
         KEYWORD.u8,
+      ),
+    prim_type: ($) =>
+      choice(
+        KEYWORD.bool,
+        KEYWORD.int,
+        KEYWORD.float,
+        KEYWORD.str,
+        KEYWORD.void,
+        $.int_type
       ),
     block: ($) =>
       seq(
@@ -394,7 +405,7 @@ module.exports = grammar({
       seq(
         optional($.type),
         "[",
-        sep_by($.pattern, ","),
+        sep_by(seq(optional("set"), $.pattern), ","),
         "]",
       ),
     variable_definition: ($) =>
@@ -556,6 +567,8 @@ module.exports = grammar({
             KEYWORD.notEquals,
           ),
         ],
+        // This will probably change to be actual builtin functions, and not just externals
+        [PREC.bitwise, choice(BITWISE.lshift, BITWISE.rshift, BITWISE.xor)],
         [PREC.additive, choice(KEYWORD.plus, KEYWORD.minus)],
         [PREC.multiplicative, choice(KEYWORD.asterisk, KEYWORD.slash)],
       ];
@@ -578,7 +591,7 @@ module.exports = grammar({
         "//",
         /.*/,
       )),
-    int_lit: (_) => /-?[0-9]+/,
+    int_lit: ($) => seq(/-?[0-9]+/, optional($.int_type)),
     float_lit: (_) => {
       const digits = repeat1(/[0-9]+/);
       return token(seq(
