@@ -839,6 +839,61 @@
         }
       ]
     },
+    "array_access": {
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "call_expr"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "generic_function"
+              }
+            ]
+          },
+          {
+            "type": "STRING",
+            "value": "["
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "call_expr"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "generic_function"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "int_lit"
+              }
+            ]
+          },
+          {
+            "type": "STRING",
+            "value": "]"
+          }
+        ]
+      }
+    },
     "array_type": {
       "type": "SEQ",
       "members": [
@@ -1295,6 +1350,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "array_access"
+        },
+        {
+          "type": "SYMBOL",
           "name": "_expr_ending_with_block"
         }
       ]
@@ -1475,23 +1534,6 @@
           }
         ]
       }
-    },
-    "initialization_expr": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "identifier"
-        },
-        {
-          "type": "STRING",
-          "value": "="
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_expr"
-        }
-      ]
     },
     "assignment_expr": {
       "type": "SEQ",
@@ -2113,6 +2155,10 @@
                     {
                       "type": "STRING",
                       "value": "/"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "mod"
                     }
                   ]
                 }

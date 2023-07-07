@@ -332,6 +332,24 @@ module.exports = grammar({
         ),
       ),
     reference_type: ($) => seq("&", $.type),
+    array_access: ($) => 
+      prec(1,
+        seq(
+          choice(
+            $.identifier,
+            $.call_expr,
+            $.generic_function,
+          ),
+          "[",
+          choice(
+            $.identifier,
+            $.call_expr,
+            $.generic_function,
+            $.int_lit,
+          ),
+          "]",
+        ),
+      ),
     array_type: ($) => seq(
         choice($.static_array_type, $.dynamic_array_type),
       ),
@@ -430,6 +448,7 @@ module.exports = grammar({
         $.augment,
         $.not,
         $.parenthesized_expr,
+        $.array_access,
         $._expr_ending_with_block,
       ),
     parenthesized_expr: ($) => seq("(", $._expr, ")"),

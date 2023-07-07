@@ -339,3 +339,57 @@ func a() {
               (int_lit
                 (int_type)))
             (identifier)))))))
+
+========================================================================
+variable definition with array access
+========================================================================
+
+func cursed(i int) Goblin {
+  goblin = goblins[i];
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type
+            (type_identifier))))
+      (type
+        (type_identifier)))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (array_access
+          (identifier)
+          (identifier))))))
+
+========================================================================
+variable definition with int literal array access
+========================================================================
+
+func cursed() Goblin {
+  goblin = goblins[13];
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters)
+      (type
+        (type_identifier)))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (array_access
+          (identifier)
+          (int_lit))))))
