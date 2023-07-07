@@ -3,7 +3,7 @@ function comma_sep1(rule) {
 }
 
 function sep_by(rule, separator) {
-  return seq(rule, repeat(seq(separator, rule)));
+  return seq(optional(rule), repeat(seq(separator, rule)));
 }
 
 const PREC = {
@@ -167,6 +167,7 @@ module.exports = grammar({
     [$._type_identifier, $._path],
     [$.scoped_identifier, $.scoped_type_identifier, $.pattern],
     [$.scoped_identifier, $._type_identifier],
+    [$.dynamic_array_type, $.destruct],
   ],
   extras: ($) => [/\s/, $.line_comment],
   rules: {

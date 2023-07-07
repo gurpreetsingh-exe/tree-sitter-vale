@@ -267,11 +267,35 @@ func secret() int {
           (identifier))))))
 
 ========================================================================
+destructuring
+========================================================================
+
+func a() {
+  [abc] = Destructered();
+}
+
+------------------------------------------------------------------------
+
+(source_file
+      (function_definition
+        (func_header
+          (identifier)
+          (parameters))
+        (block
+          (variable_definition
+            (pattern
+              (destruct
+                (pattern
+                  (identifier))))
+            (call_expr
+              (identifier))))))
+
+========================================================================
 destructuring with set
 ========================================================================
 
 func a() {
-  [abc, set def] = Destrucutered();
+  [abc, set def] = Destructered();
 }
 
 ------------------------------------------------------------------------
@@ -289,6 +313,28 @@ func a() {
                   (identifier))
                 (pattern
                   (identifier))))
+            (call_expr
+              (identifier))))))
+
+========================================================================
+destructure array (drop)
+========================================================================
+
+func a() {
+  [] = Destructered();
+}
+
+------------------------------------------------------------------------
+
+(source_file
+      (function_definition
+        (func_header
+          (identifier)
+          (parameters))
+        (block
+          (variable_definition
+            (pattern
+              (destruct))
             (call_expr
               (identifier))))))
 
