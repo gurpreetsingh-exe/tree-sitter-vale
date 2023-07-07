@@ -172,3 +172,56 @@ exported func region<a' ro>(lovely_things &a'List<a'str>) {
     (block
       (literal
           (string_literal)))))
+
+========================================================================
+operator overload with regions
+========================================================================
+
+func ==<A', B'>(a A'str, b B'str) bool {
+  streq(a, 0, a.len(), b, 0, b.len())
+}
+
+------------------------------------------------------------------------
+
+    (source_file
+      (function_definition
+        (func_header
+          (generic_parameters
+            (generic_parameter
+              (region_parameter
+                (identifier)))
+            (generic_parameter
+              (region_parameter
+                (identifier))))
+          (parameters
+            (parameter
+              (identifier)
+              (type
+                (region_specifier
+                  (identifier))
+                (type_identifier)))
+            (parameter
+              (identifier)
+              (type
+                (region_specifier
+                  (identifier))
+                (type_identifier))))
+          (type
+            (type_identifier)))
+        (block
+          (call_expr
+            (identifier)
+            (identifier)
+            (literal
+              (int_lit))
+            (call_expr
+              (field_expr
+                (identifier)
+                (field_identifier)))
+            (identifier)
+            (literal
+              (int_lit))
+            (call_expr
+              (field_expr
+                (identifier)
+                (field_identifier)))))))
