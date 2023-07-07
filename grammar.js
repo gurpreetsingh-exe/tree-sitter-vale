@@ -331,7 +331,7 @@ module.exports = grammar({
         "[",
         "]",
         optional($.type_parameters),
-        $._type_identifier,
+        $.type,
       ),
     static_array_type: ($) =>
       seq(
@@ -340,7 +340,7 @@ module.exports = grammar({
         choice($.int_lit, $._type_identifier),
         "]",
         optional($.type_parameters),
-        $._type_identifier,
+        $.type,
       ),
     generic_type: ($) =>
       prec(

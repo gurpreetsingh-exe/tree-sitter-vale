@@ -642,7 +642,7 @@
       "required": true,
       "types": [
         {
-          "type": "type_identifier",
+          "type": "type",
           "named": true
         },
         {
@@ -1026,6 +1026,22 @@
         "types": [
           {
             "type": "!=",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
             "named": false
           },
           {
@@ -1882,6 +1898,10 @@
       "types": [
         {
           "type": "int_lit",
+          "named": true
+        },
+        {
+          "type": "type",
           "named": true
         },
         {

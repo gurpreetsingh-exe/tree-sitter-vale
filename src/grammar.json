@@ -287,6 +287,22 @@
                 "members": [
                   {
                     "type": "STRING",
+                    "value": "+"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "*"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "/"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "-"
+                  },
+                  {
+                    "type": "STRING",
                     "value": "<=>"
                   },
                   {
@@ -866,7 +882,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_type_identifier"
+          "name": "type"
         }
       ]
     },
@@ -912,7 +928,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_type_identifier"
+          "name": "type"
         }
       ]
     },
