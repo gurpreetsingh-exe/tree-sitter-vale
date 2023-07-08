@@ -3,10 +3,11 @@ function comma_sep1(rule) {
 }
 
 function sep_by(rule, separator) {
-  return seq(rule, repeat(seq(separator, rule)));
+  return seq(optional(rule), repeat(seq(separator, rule)));
 }
 
 const PREC = {
+  bitwise: 8,
   field: 7,
   multiplicative: 6,
   additive: 5,
@@ -101,6 +102,8 @@ const KEYWORD = {
   doubleEquals: "==",
   notEquals: "!=",
 
+  mod: "mod",
+
   drop: "drop",
   free: "free",
   not: "not",
@@ -122,6 +125,12 @@ const OWNERSHIP = {
   borrow: "&",
   weak: "&&",
   region: "'",
+};
+
+const BITWISE = {
+  xor: "xor",
+  rshift: "rshift",
+  lshift: "lshift",
 };
 
 const RUNES = [
@@ -158,6 +167,7 @@ module.exports = grammar({
     [$._type_identifier, $._path],
     [$.scoped_identifier, $.scoped_type_identifier, $.pattern],
     [$.scoped_identifier, $._type_identifier],
+    [$.dynamic_array_type, $.destruct],
   ],
   extras: ($) => [/\s/, $.line_comment],
   rules: {
@@ -287,6 +297,7 @@ module.exports = grammar({
         optional(
           comma_sep1($.parameter),
         ),
+        optional(","),
         ")",
       ),
     parameter: ($) =>
@@ -323,8 +334,35 @@ module.exports = grammar({
         ),
       ),
     reference_type: ($) => seq("&", $.type),
+    array_access: ($) => 
+      prec(1,
+        seq(
+          field("name",
+            choice(
+              $.identifier,
+              $.call_expr,
+              $.generic_function,
+            ),
+          ),
+          repeat1(
+            seq(
+              "[",
+              choice(
+                $.identifier,
+                $.call_expr,
+                $.generic_function,
+                $.int_lit,
+              ),
+              "]",
+            ),
+          ),
+        ),
+      ),
     array_type: ($) => seq(
-        choice($.static_array_type, $.dynamic_array_type),
+        choice(
+          prec(2, repeat1($.static_array_type)),
+          prec(1, repeat1($.dynamic_array_type))
+        ),
       ),
     dynamic_array_type: ($) =>
       seq(
@@ -356,13 +394,8 @@ module.exports = grammar({
           field("generic_parameters", $.generic_parameters),
         ),
       ),
-    prim_type: (_) =>
+    int_type: (_) => 
       choice(
-        KEYWORD.bool,
-        KEYWORD.int,
-        KEYWORD.float,
-        KEYWORD.str,
-        KEYWORD.void,
         KEYWORD.i32,
         KEYWORD.i64,
         KEYWORD.i16,
@@ -371,6 +404,15 @@ module.exports = grammar({
         KEYWORD.u64,
         KEYWORD.u16,
         KEYWORD.u8,
+      ),
+    prim_type: ($) =>
+      choice(
+        KEYWORD.bool,
+        KEYWORD.int,
+        KEYWORD.float,
+        KEYWORD.str,
+        KEYWORD.void,
+        $.int_type
       ),
     block: ($) =>
       seq(
@@ -394,7 +436,7 @@ module.exports = grammar({
       seq(
         optional($.type),
         "[",
-        sep_by($.pattern, ","),
+        sep_by(seq(optional("set"), $.pattern), ","),
         "]",
       ),
     variable_definition: ($) =>
@@ -417,6 +459,7 @@ module.exports = grammar({
         $.augment,
         $.not,
         $.parenthesized_expr,
+        $.array_access,
         $._expr_ending_with_block,
       ),
     parenthesized_expr: ($) => seq("(", $._expr, ")"),
@@ -475,7 +518,10 @@ module.exports = grammar({
       seq(
         field(
           "function",
-          $._expr,
+          choice(
+            $._expr,
+            $.array_type,
+          ),
         ),
         field(
           "parameters",
@@ -556,8 +602,10 @@ module.exports = grammar({
             KEYWORD.notEquals,
           ),
         ],
+        // This will probably change to be actual builtin functions, and not just externals
+        [PREC.bitwise, choice(BITWISE.lshift, BITWISE.rshift, BITWISE.xor)],
         [PREC.additive, choice(KEYWORD.plus, KEYWORD.minus)],
-        [PREC.multiplicative, choice(KEYWORD.asterisk, KEYWORD.slash)],
+        [PREC.multiplicative, choice(KEYWORD.asterisk, KEYWORD.slash, KEYWORD.mod)],
       ];
 
       return choice(
@@ -578,7 +626,7 @@ module.exports = grammar({
         "//",
         /.*/,
       )),
-    int_lit: (_) => /-?[0-9]+/,
+    int_lit: ($) => seq(/-?[0-9]+/, optional($.int_type)),
     float_lit: (_) => {
       const digits = repeat1(/[0-9]+/);
       return token(seq(

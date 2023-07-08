@@ -225,3 +225,331 @@ func ==<A', B'>(a A'str, b B'str) bool {
               (field_expr
                 (identifier)
                 (field_identifier)))))))
+
+========================================================================
+use 'sneaky' builtin functions
+========================================================================
+
+func secret() int {
+  mask = (1 lshift 10) xor (64 rshift 4);
+  return mask;
+}
+
+------------------------------------------------------------------------
+
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters)
+      (type
+        (type_identifier)))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (binary_expr
+          (parenthesized_expr
+            (binary_expr
+              (literal
+                (int_lit))
+              (literal
+                (int_lit))))
+          (parenthesized_expr
+            (binary_expr
+              (literal
+                (int_lit))
+              (literal
+                (int_lit))))))
+      (expr_statement
+        (return_expr
+          (identifier))))))
+
+========================================================================
+destructuring
+========================================================================
+
+func a() {
+  [abc] = Destructered();
+}
+
+------------------------------------------------------------------------
+
+(source_file
+      (function_definition
+        (func_header
+          (identifier)
+          (parameters))
+        (block
+          (variable_definition
+            (pattern
+              (destruct
+                (pattern
+                  (identifier))))
+            (call_expr
+              (identifier))))))
+
+========================================================================
+destructuring with set
+========================================================================
+
+func a() {
+  [abc, set def] = Destructered();
+}
+
+------------------------------------------------------------------------
+
+(source_file
+      (function_definition
+        (func_header
+          (identifier)
+          (parameters))
+        (block
+          (variable_definition
+            (pattern
+              (destruct
+                (pattern
+                  (identifier))
+                (pattern
+                  (identifier))))
+            (call_expr
+              (identifier))))))
+
+========================================================================
+destructure array (drop)
+========================================================================
+
+func a() {
+  [] = Destructered();
+}
+
+------------------------------------------------------------------------
+
+(source_file
+      (function_definition
+        (func_header
+          (identifier)
+          (parameters))
+        (block
+          (variable_definition
+            (pattern
+              (destruct))
+            (call_expr
+              (identifier))))))
+
+========================================================================
+variable assignment with keyword overlap
+========================================================================
+
+func a() {
+  rows = getRows();
+  dublin = getCapital("Ireland");
+
+  rand_seed = 1337;
+  rand = XS32Rand(-1i64 * rand_seed);
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (call_expr
+          (identifier)))
+      (variable_definition
+        (pattern
+          (identifier))
+        (call_expr
+          (identifier)
+          (literal
+            (string_literal))))
+      (variable_definition
+        (pattern
+          (identifier))
+        (literal
+          (int_lit)))
+      (variable_definition
+        (pattern
+          (identifier))
+        (call_expr
+          (identifier)
+          (binary_expr
+            (literal
+              (int_lit
+                (int_type)))
+            (identifier)))))))
+
+========================================================================
+variable definition with array access
+========================================================================
+
+func cursed(i int) Goblin {
+  goblin = goblins[i];
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type
+            (type_identifier))))
+      (type
+        (type_identifier)))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (array_access
+          (identifier)
+          (identifier))))))
+
+========================================================================
+variable definition with mixed literal array access
+========================================================================
+
+func cursed(i int) Goblin {
+  goblin = goblins[13][i];
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type
+            (type_identifier))))
+      (type
+        (type_identifier)))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (array_access
+          (identifier)
+          (int_lit)
+          (identifier))))))
+
+========================================================================
+variable definition with multi array access
+========================================================================
+
+func cursed(i int) Goblin {
+  goblin = goblins[13][i][1][100];
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type
+            (type_identifier))))
+      (type
+        (type_identifier)))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (array_access
+          (identifier)
+          (int_lit)
+          (identifier)
+          (int_lit)
+          (int_lit))))))
+
+========================================================================
+multi array decl
+========================================================================
+
+func cursed(i [][]int) [][]Goblin {
+  return transform(i);
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type
+            (array_type
+              (dynamic_array_type
+                (type
+                  (array_type
+                    (dynamic_array_type
+                      (type
+                        (type_identifier))))))))))
+      (type
+        (array_type
+          (dynamic_array_type
+            (type
+              (array_type
+                (dynamic_array_type
+                  (type
+                    (type_identifier)))))))))
+    (block
+      (expr_statement
+        (return_expr
+          (call_expr
+            (identifier)
+            (identifier)))))))
+
+
+========================================================================
+multi array decl with construction
+========================================================================
+
+func cursed() [][]Goblin {
+  goblins = [][]Goblin();
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters)
+      (type
+        (array_type
+          (dynamic_array_type
+            (type
+              (array_type
+                (dynamic_array_type
+                  (type
+                    (type_identifier)))))))))
+    (block
+      (variable_definition
+        (pattern
+          (identifier))
+        (call_expr
+          (array_type
+            (dynamic_array_type
+              (type
+                (array_type
+                  (dynamic_array_type
+                    (type
+                      (type_identifier))))))))))))
