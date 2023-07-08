@@ -7,6 +7,7 @@ function sep_by(rule, separator) {
 }
 
 const PREC = {
+  call: 9,
   bitwise: 8,
   field: 7,
   multiplicative: 6,
@@ -224,7 +225,8 @@ module.exports = grammar({
         ),
         KEYWORD.func,
         choice(
-          field("operator",
+          field(
+            "operator",
             choice(
               KEYWORD.plus,
               KEYWORD.asterisk,
@@ -334,10 +336,12 @@ module.exports = grammar({
         ),
       ),
     reference_type: ($) => seq("&", $.type),
-    array_access: ($) => 
-      prec(1,
+    array_access: ($) =>
+      prec(
+        1,
         seq(
-          field("name",
+          field(
+            "name",
             choice(
               $.identifier,
               $.call_expr,
@@ -358,10 +362,11 @@ module.exports = grammar({
           ),
         ),
       ),
-    array_type: ($) => seq(
+    array_type: ($) =>
+      seq(
         choice(
           prec(2, repeat1($.static_array_type)),
-          prec(1, repeat1($.dynamic_array_type))
+          prec(1, repeat1($.dynamic_array_type)),
         ),
       ),
     dynamic_array_type: ($) =>
@@ -394,7 +399,7 @@ module.exports = grammar({
           field("generic_parameters", $.generic_parameters),
         ),
       ),
-    int_type: (_) => 
+    int_type: (_) =>
       choice(
         KEYWORD.i32,
         KEYWORD.i64,
@@ -412,7 +417,7 @@ module.exports = grammar({
         KEYWORD.float,
         KEYWORD.str,
         KEYWORD.void,
-        $.int_type
+        $.int_type,
       ),
     block: ($) =>
       seq(
@@ -515,23 +520,26 @@ module.exports = grammar({
       ),
     bool_lit: (_) => choice("true", "false"),
     call_expr: ($) =>
-      seq(
-        field(
-          "function",
-          choice(
-            $._expr,
-            $.array_type,
-          ),
-        ),
-        field(
-          "parameters",
-          seq(
-            "(",
-            optional(
-              sep_by($._expr, ","),
+      prec(
+        PREC.call,
+        seq(
+          field(
+            "function",
+            choice(
+              $._expr,
+              $.array_type,
             ),
-            optional(","),
-            ")",
+          ),
+          field(
+            "parameters",
+            seq(
+              "(",
+              optional(
+                sep_by($._expr, ","),
+              ),
+              optional(","),
+              ")",
+            ),
           ),
         ),
       ),
@@ -605,7 +613,10 @@ module.exports = grammar({
         // This will probably change to be actual builtin functions, and not just externals
         [PREC.bitwise, choice(BITWISE.lshift, BITWISE.rshift, BITWISE.xor)],
         [PREC.additive, choice(KEYWORD.plus, KEYWORD.minus)],
-        [PREC.multiplicative, choice(KEYWORD.asterisk, KEYWORD.slash, KEYWORD.mod)],
+        [
+          PREC.multiplicative,
+          choice(KEYWORD.asterisk, KEYWORD.slash, KEYWORD.mod),
+        ],
       ];
 
       return choice(
