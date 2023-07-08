@@ -14,8 +14,8 @@
 (generic_function function: (identifier) @function.call)
 
 ((rune) @type)
-((identifier) @type
-              (#lua-match? @type "^[A-Z]"))
+((identifier) @struct
+              (#lua-match? @struct "^[A-Z]"))
 
 (func_header (identifier) @function)
 (struct_definition (type_identifier) @struct)
@@ -98,6 +98,10 @@
  "and"
  "or"
  "not"
+ "mod"
+ "xor"
+ "lshift"
+ "rshift"
  ] @keyword
 
 
