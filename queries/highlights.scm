@@ -25,7 +25,9 @@
 (bool_lit) @constant
 (int_lit) @constant
 (float_lit) @constant
-(string_literal) @string
+(string_literal (interpolated_string_text) @string)
+(string_literal (interpolated_raw_string_text) @string)
+["\""  "\"\"\""] @string
 (escape_sequence) @string.escape
 
 (line_comment) @comment
@@ -41,6 +43,7 @@
  "<"
  ">"
  "{"
+ "{\\" ; string interpolation escape
  "}"
  ] @punctuation.bracket
 

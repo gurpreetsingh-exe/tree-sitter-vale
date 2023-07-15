@@ -31,7 +31,8 @@ func main() {
       (parameters))
     (block
       (literal
-        (string_literal)))))
+        (string_literal
+          (interpolated_string_text))))))
 
 ========================================================================
 small string with hex escape
@@ -52,10 +53,16 @@ func main() {
       (binary_expr
         (literal
           (string_literal
-            (escape_sequence)))
+            (interpolated_string_text)
+            (interpolated_string_text
+              (escape_sequence))
+            (interpolated_string_text)))
         (literal
           (string_literal
-            (escape_sequence)))))))
+            (interpolated_string_text)
+            (interpolated_string_text
+              (escape_sequence))
+            (interpolated_string_text)))))))
 
 ========================================================================
 string interpolation
@@ -78,13 +85,15 @@ exported func main() str {
         (expr_statement
           (return_expr
             (literal
-              (string_literal)
-              (escape_sequence
-                (call_expr
-                  (identifier)
-                  (parameters
-                    (numeric_literal))))
-              (string_literal))))))))
+              (string_literal
+                (interpolated_raw_string_text)
+                (interpolated_raw_string_text)
+                (interpolation
+                  (call_expr
+                    (identifier)
+                    (literal
+                      (int_lit))))
+                (interpolated_raw_string_text))))))))
 
 ========================================================================
 pure function
@@ -107,7 +116,8 @@ pure func main() str {
       (expr_statement
         (return_expr
           (literal
-            (string_literal)))))))
+            (string_literal
+              (interpolated_string_text))))))))
 
 ========================================================================
 function with read only region
@@ -133,7 +143,8 @@ exported func region<a' ro>() {
         (pattern
           (identifier))
         (literal
-          (string_literal))))))
+          (string_literal
+            (interpolated_string_text)))))))
 
 ========================================================================
 function with region complex type
@@ -157,21 +168,22 @@ exported func region<a' ro>(lovely_things &a'List<a'str>) {
         (parameter
           (identifier)
           (type
-                (reference_type
-                  (type
-                    (region_specifier
-                      (identifier))
-                    (generic_type
-                      (type_identifier)
-                      (generic_parameters
-                        (generic_parameter
-                          (type
-                            (region_specifier
-                              (identifier))
-                            (type_identifier)))))))))))
+            (reference_type
+              (type
+                (region_specifier
+                  (identifier))
+                (generic_type
+                  (type_identifier)
+                  (generic_parameters
+                    (generic_parameter
+                      (type
+                        (region_specifier
+                          (identifier))
+                        (type_identifier)))))))))))
     (block
       (literal
-          (string_literal)))))
+        (string_literal
+          (interpolated_string_text))))))
 
 ========================================================================
 operator overload with regions
@@ -369,7 +381,8 @@ func a() {
         (call_expr
           (identifier)
           (literal
-            (string_literal))))
+            (string_literal
+              (interpolated_string_text)))))
       (variable_definition
         (pattern
           (identifier))
@@ -553,3 +566,88 @@ func cursed() [][]Goblin {
                   (dynamic_array_type
                     (type
                       (type_identifier))))))))))))
+
+
+========================================================================
+big string with braces
+========================================================================
+
+func cursed() {
+    """
+    {
+        still a string
+    }
+    """
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters))
+    (block
+      (literal
+        (string_literal
+          (interpolated_raw_string_text)
+          (interpolated_raw_string_text)
+          (interpolated_raw_string_text))))))
+
+
+========================================================================
+big string with unescaped interpolation
+========================================================================
+
+func cursed() {
+    """
+    {\
+        f()
+    }
+    """
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters))
+    (block
+      (literal
+        (string_literal
+          (interpolated_raw_string_text)
+          (interpolation
+            (call_expr
+              (identifier)))
+          (interpolated_raw_string_text))))))
+
+
+========================================================================
+big string with hex escape
+========================================================================
+
+func cursed() {
+    """
+    sprog\u001bwoggle, sprog\nbwoggle
+    """
+}
+
+------------------------------------------------------------------------
+
+(source_file
+  (function_definition
+    (func_header
+      (identifier)
+      (parameters))
+    (block
+      (literal
+        (string_literal
+          (interpolated_raw_string_text)
+          (interpolated_raw_string_text
+            (escape_sequence))
+          (interpolated_raw_string_text)
+          (interpolated_raw_string_text
+            (escape_sequence))
+          (interpolated_raw_string_text))))))

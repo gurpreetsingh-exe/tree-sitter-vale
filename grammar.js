@@ -647,7 +647,11 @@ module.exports = grammar({
         digits,
       ));
     },
-    string_literal: ($) => $._string_literal,
+    string_literal: ($) =>
+      choice(
+        $._string_literal,
+        $._big_string_literal,
+      ),
     escape_sequence: (_) =>
       token.immediate(
         seq(
@@ -660,14 +664,42 @@ module.exports = grammar({
           ),
         ),
       ),
+    // thank you tree-sitter-c-sharp
     _string_literal: ($) =>
+      seq('"', repeat($._interpolated_string_content), '"'),
+    _interpolated_string_content: ($) =>
+      choice(
+        $.interpolated_string_text,
+        $.interpolation,
+      ),
+    interpolated_string_text: ($) =>
+      choice(
+        $._interpolated_string_text_fragment,
+        $.escape_sequence,
+      ),
+    _interpolated_string_text_fragment: ($) =>
+      token.immediate(prec(1, /[^{"\\\n]+/)),
+    _big_string_literal: ($) =>
+      seq('"""', repeat($._interpolated_raw_string_content), '"""'),
+    _interpolated_raw_string_content: ($) =>
+      choice(
+        $.interpolated_raw_string_text,
+        $.interpolation,
+      ),
+    interpolated_raw_string_text: ($) =>
+      choice(
+        $._interpolated_verbatim_string_text_fragment,
+        $.escape_sequence,
+        "{\n",
+        '"',
+      ),
+    _interpolated_verbatim_string_text_fragment: ($) =>
+      token.immediate(prec(1, /[^{"\\]+/)),
+    interpolation: ($) =>
       seq(
-        '"',
-        repeat(choice(
-          token.immediate(prec(1, repeat1(/[^\\"\n]/))),
-          $.escape_sequence,
-        )),
-        '"',
+        choice("{", "{\\"),
+        $._expr,
+        "}",
       ),
     _type_identifier: ($) => alias($.identifier, $.type_identifier),
     _path: ($) => choice($.identifier, $.scoped_identifier),
