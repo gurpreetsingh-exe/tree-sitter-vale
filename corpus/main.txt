@@ -454,8 +454,10 @@ func cursed(i int) Goblin {
         (pattern
           (identifier))
         (array_access
-          (identifier)
-          (int_lit)
+          (array_access
+            (identifier)
+            (literal
+              (int_lit)))
           (identifier))))))
 
 ========================================================================
@@ -484,11 +486,17 @@ func cursed(i int) Goblin {
         (pattern
           (identifier))
         (array_access
-          (identifier)
-          (int_lit)
-          (identifier)
-          (int_lit)
-          (int_lit))))))
+          (array_access
+            (array_access
+              (array_access
+                (identifier)
+                (literal
+                  (int_lit)))
+              (identifier))
+            (literal
+              (int_lit)))
+          (literal
+            (int_lit)))))))
 
 ========================================================================
 multi array decl

@@ -158,17 +158,18 @@ module.exports = grammar({
   conflicts: ($) => [
     [$._expr, $.generic_function],
     [$._expr, $._path],
-    [$.pattern, $._expr],
-    [$.int_lit, $.float_lit],
-    [$.return_expr, $.call_expr],
-    [$.assignment_expr, $.call_expr],
-    [$.augment, $.call_expr],
-    [$.not, $.call_expr],
     [$._expr, $.generic_function, $._type_identifier],
-    [$._type_identifier, $._path],
     [$.scoped_identifier, $.scoped_type_identifier, $.pattern],
     [$.scoped_identifier, $._type_identifier],
+    [$.scoped_identifier, $.pattern],
     [$.dynamic_array_type, $.destruct],
+    [$.scoped_identifier],
+    [$.scoped_type_identifier, $.type],
+    [$.scoped_type_identifier],
+    [$.pattern],
+    [$._type_identifier, $._path],
+    [$._expr, $._type_identifier, $._path],
+    [$._expr, $._type_identifier],
   ],
   extras: ($) => [/\s/, $.line_comment],
   rules: {
@@ -342,23 +343,12 @@ module.exports = grammar({
         seq(
           field(
             "name",
-            choice(
-              $.identifier,
-              $.call_expr,
-              $.generic_function,
-            ),
+            $._expr,
           ),
-          repeat1(
-            seq(
-              "[",
-              choice(
-                $.identifier,
-                $.call_expr,
-                $.generic_function,
-                $.int_lit,
-              ),
-              "]",
-            ),
+          seq(
+            "[",
+            $._expr,
+            "]",
           ),
         ),
       ),
@@ -434,18 +424,31 @@ module.exports = grammar({
     _statement: ($) => choice($.expr_statement, $.variable_definition),
     pattern: ($) =>
       choice(
-        $._path,
-        $.destruct,
+        seq(
+          optional("set"),
+          $._path,
+          optional(" "),
+          optional($.type),
+          optional($.destruct),
+        ),
+        seq(
+          optional("set"),
+          $._path,
+          optional(" "),
+          optional($.destruct),
+        ),
+        seq(
+          optional($.type),
+          $.destruct,
+        ),
       ),
     destruct: ($) =>
       seq(
-        optional($.type),
         "[",
-        sep_by(seq(optional("set"), $.pattern), ","),
+        sep_by($.pattern, ","),
         "]",
       ),
-    variable_definition: ($) =>
-      seq($.pattern, optional($.type), "=", $._expr, ";"),
+    variable_definition: ($) => seq($.pattern, "=", $._expr, ";"),
     return_expr: ($) =>
       seq(
         KEYWORD.return,

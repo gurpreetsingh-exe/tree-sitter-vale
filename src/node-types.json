@@ -8,7 +8,31 @@
         "required": true,
         "types": [
           {
+            "type": "array_access",
+            "named": true
+          },
+          {
+            "type": "assignment_expr",
+            "named": true
+          },
+          {
+            "type": "augment",
+            "named": true
+          },
+          {
+            "type": "binary_expr",
+            "named": true
+          },
+          {
             "type": "call_expr",
+            "named": true
+          },
+          {
+            "type": "field_expr",
+            "named": true
+          },
+          {
+            "type": "foreach",
             "named": true
           },
           {
@@ -18,16 +42,68 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "if_expr",
+            "named": true
+          },
+          {
+            "type": "lambda",
+            "named": true
+          },
+          {
+            "type": "literal",
+            "named": true
+          },
+          {
+            "type": "not",
+            "named": true
+          },
+          {
+            "type": "parenthesized_expr",
+            "named": true
+          },
+          {
+            "type": "return_expr",
+            "named": true
+          },
+          {
+            "type": "while_expr",
+            "named": true
           }
         ]
       }
     },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
+          "type": "array_access",
+          "named": true
+        },
+        {
+          "type": "assignment_expr",
+          "named": true
+        },
+        {
+          "type": "augment",
+          "named": true
+        },
+        {
+          "type": "binary_expr",
+          "named": true
+        },
+        {
           "type": "call_expr",
+          "named": true
+        },
+        {
+          "type": "field_expr",
+          "named": true
+        },
+        {
+          "type": "foreach",
           "named": true
         },
         {
@@ -39,7 +115,31 @@
           "named": true
         },
         {
-          "type": "int_lit",
+          "type": "if_expr",
+          "named": true
+        },
+        {
+          "type": "lambda",
+          "named": true
+        },
+        {
+          "type": "literal",
+          "named": true
+        },
+        {
+          "type": "not",
+          "named": true
+        },
+        {
+          "type": "parenthesized_expr",
+          "named": true
+        },
+        {
+          "type": "return_expr",
+          "named": true
+        },
+        {
+          "type": "while_expr",
           "named": true
         }
       ]
@@ -718,10 +818,6 @@
       "types": [
         {
           "type": "pattern",
-          "named": true
-        },
-        {
-          "type": "type",
           "named": true
         }
       ]
@@ -1903,7 +1999,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -1916,6 +2012,10 @@
         },
         {
           "type": "scoped_identifier",
+          "named": true
+        },
+        {
+          "type": "type",
           "named": true
         }
       ]
@@ -2385,10 +2485,6 @@
           "named": true
         },
         {
-          "type": "type",
-          "named": true
-        },
-        {
           "type": "while_expr",
           "named": true
         }
@@ -2480,6 +2576,10 @@
         ]
       }
     }
+  },
+  {
+    "type": " ",
+    "named": false
   },
   {
     "type": "!",
